@@ -1,0 +1,26 @@
+services:
+  web:
+    build: .
+    container_name: django_app
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    env_file: .env
+    expose:
+      - "80"
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
+  media_volume:
